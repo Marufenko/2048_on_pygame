@@ -35,21 +35,30 @@ def main():
         x = 0
 
     while 1:  # main loop
-        action = False
+        right = left = up = down = False
 
         # input handling
         for e in pygame.event.get():
+            if e.type == KEYUP and e.key == K_RIGHT:
+                right = True
+            if e.type == KEYUP and e.key == K_LEFT:
+                left = True
+            if e.type == KEYUP and e.key == K_UP:
+                up = True
+            if e.type == KEYUP and e.key == K_DOWN:
+                down = True
             if e.type == QUIT:
                 raise SystemExit("QUIT")
-            if e.type == KEYUP and e.key == K_RIGHT:
-                action = True
 
-        while action:
+        # data recalculate/generates and screen is overrides in the main loop to triger it once per key click
+        while right or left or up or down:
 
-            # draw updated cells here
-            new_value = generate_input_value()
+            new_value = generate_input_value()  # generate 2 or 4 Int randomly
             x_coor, y_coor = generate_coordinates_for_input(data_array)  # coordinated for new value
-            data_array[x_coor][y_coor] = new_value
+            try:
+                data_array[x_coor][y_coor] = new_value
+            except IndexError:
+                pass  # no new value in case there is no empty cell
 
             x = y = 0
             for i in range(4):
@@ -61,7 +70,7 @@ def main():
                 y += SPACE_FOR_ONE_CELL
                 x = 0
 
-            action = False
+            right = left = up = down = False
 
         screen.blit(background, (0, 0))
         entities.draw(screen)
@@ -79,7 +88,12 @@ def generate_coordinates_for_input(input_array):
         for j in range(4):
             if input_array[i][j] == 0:
                 empty_coordinates.append([i, j])
-    return random.choice(empty_coordinates)
+
+    if empty_coordinates:
+        result = random.choice(empty_coordinates)
+    else:
+        result = [5, 5]  # random out or range index
+    return result
 
 
 if __name__ == "__main__":
