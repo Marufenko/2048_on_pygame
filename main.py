@@ -53,6 +53,15 @@ def main():
         # data recalculate/generates and screen is overrides in the main loop to triger it once per key click
         while right or left or up or down:
 
+            if left:
+                data_array = left_turn(data_array)
+            if right:
+                data_array = right_turn(data_array)
+            if up:
+                data_array = up_turn(data_array)
+            if down:
+                data_array = down_turn(data_array)
+
             new_value = generate_input_value()  # generate 2 or 4 Int randomly
             x_coor, y_coor = generate_coordinates_for_input(data_array)  # coordinated for new value
             try:
@@ -94,6 +103,74 @@ def generate_coordinates_for_input(input_array):
     else:
         result = [5, 5]  # random out or range index
     return result
+
+
+def left_turn(data_array):
+    for i in range(4):  # execute for each of 4 lines
+        sum_done = False  # only two values may be sum up under one move
+        for k in range(3):  # max three-cell offset
+            for j in range(3):  # execute for each of three pairs of values
+                if not sum_done:
+                    if data_array[i][j] == data_array[i][j + 1] and data_array[i][j] != 0:
+                        data_array[i][j] *= 2
+                        data_array[i][j + 1] = 0
+                        sum_done = True
+                if data_array[i][j] == 0:
+                    data_array[i][j] = data_array[i][j + 1]
+                    data_array[i][j + 1] = 0
+
+    return data_array
+
+
+def right_turn(data_array):
+    for i in range(4):  # execute for each of 4 lines
+        sum_done = False  # only two values may be sum up under one move
+        for k in range(3):  # max three-cell offset
+            for j in range(3):  # execute for each of three pairs of values
+                if not sum_done:
+                    if data_array[i][-(j+1)] == data_array[i][-(j + 2)] and data_array[i][-(j+1)] != 0:
+                        data_array[i][-(j+1)] *= 2
+                        data_array[i][-(j + 2)] = 0
+                        sum_done = True
+                if data_array[i][-(j+1)] == 0:
+                    data_array[i][-(j+1)] = data_array[i][-(j + 2)]
+                    data_array[i][-(j + 2)] = 0
+
+    return data_array
+
+
+def up_turn(data_array):
+    for j in range(4):  # execute for each of 4 columns
+        sum_done = False  # only two values may be sum up under one move
+        for k in range(3):  # max three-cell offset
+            for i in range(3):  # execute for each of three pairs of values
+                if not sum_done:
+                    if data_array[i][j] == data_array[i+1][j] and data_array[i][j] != 0:
+                        data_array[i][j] *= 2
+                        data_array[i+1][j] = 0
+                        sum_done = True
+                if data_array[i][j] == 0:
+                    data_array[i][j] = data_array[i+1][j]
+                    data_array[i+1][j] = 0
+
+    return data_array
+
+
+def down_turn(data_array):
+    for j in range(4):  # execute for each of 4 columns
+        sum_done = False  # only two values may be sum up under one move
+        for k in range(3):  # max three-cell offset
+            for i in range(2, -1, -1):  # execute for each of three pairs of values
+                if not sum_done:
+                    if data_array[i+1][j] == data_array[i][j] and data_array[i+1][j] != 0:
+                        data_array[i+1][j] *= 2
+                        data_array[i][j] = 0
+                        sum_done = True
+                if data_array[i+1][j] == 0:
+                    data_array[i+1][j] = data_array[i][j]
+                    data_array[i][j] = 0
+
+    return data_array
 
 
 if __name__ == "__main__":
