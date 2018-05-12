@@ -21,6 +21,9 @@ def main():
                   [0, 0, 0, 0],
                   [0, 0, 0, 0],
                   [0, 0, 0, 0]]
+    # generate first two values on the start
+    generate_new_value(data_array)
+    generate_new_value(data_array)
 
     # draw cells
     entities = pygame.sprite.Group()
@@ -62,12 +65,7 @@ def main():
             if down:
                 data_array = down_turn(data_array)
 
-            new_value = generate_input_value()  # generate 2 or 4 Int randomly
-            x_coor, y_coor = generate_coordinates_for_input(data_array)  # coordinated for new value
-            try:
-                data_array[x_coor][y_coor] = new_value
-            except IndexError:
-                pass  # no new value in case there is no empty cell
+            generate_new_value(data_array)
 
             x = y = 0
             for i in range(4):
@@ -103,6 +101,15 @@ def generate_coordinates_for_input(input_array):
     else:
         result = [5, 5]  # random out or range index
     return result
+
+
+def generate_new_value(data_array):
+    new_value = generate_input_value()  # generate 2 or 4 Int randomly
+    x_coor, y_coor = generate_coordinates_for_input(data_array)  # coordinated for new value
+    try:
+        data_array[x_coor][y_coor] = new_value
+    except IndexError:
+        pass  # no new value in case there is no empty cell
 
 
 def left_turn(data_array):
