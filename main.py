@@ -56,16 +56,18 @@ def main():
         # data recalculate/generates and screen is overrides in the main loop to triger it once per key click
         while right or left or up or down:
 
+            movement_done = False  # flag to track was movement done or note
             if left:
-                data_array = left_turn(data_array)
+                data_array, movement_done = left_turn(data_array)
             if right:
-                data_array = right_turn(data_array)
+                data_array, movement_done = right_turn(data_array)
             if up:
-                data_array = up_turn(data_array)
+                data_array, movement_done = up_turn(data_array)
             if down:
-                data_array = down_turn(data_array)
+                data_array, movement_done = down_turn(data_array)
 
-            generate_new_value(data_array)
+            if movement_done:  # generate new value only when movement is done
+                generate_new_value(data_array)
 
             x = y = 0
             for i in range(4):
@@ -113,6 +115,7 @@ def generate_new_value(data_array):
 
 
 def left_turn(data_array):
+    movement_done = False
     for i in range(4):  # execute for each of 4 lines
         sum_done = False  # only two values may be sum up under one move
         for k in range(3):  # max three-cell offset
@@ -122,14 +125,17 @@ def left_turn(data_array):
                         data_array[i][j] *= 2
                         data_array[i][j + 1] = 0
                         sum_done = True
-                if data_array[i][j] == 0:
+                        movement_done = True
+                if data_array[i][j] == 0 and data_array[i][j + 1] != 0:
                     data_array[i][j] = data_array[i][j + 1]
                     data_array[i][j + 1] = 0
+                    movement_done = True
 
-    return data_array
+    return data_array, movement_done
 
 
 def right_turn(data_array):
+    movement_done = False
     for i in range(4):  # execute for each of 4 lines
         sum_done = False  # only two values may be sum up under one move
         for k in range(3):  # max three-cell offset
@@ -139,14 +145,17 @@ def right_turn(data_array):
                         data_array[i][-(j+1)] *= 2
                         data_array[i][-(j + 2)] = 0
                         sum_done = True
-                if data_array[i][-(j+1)] == 0:
+                        movement_done = True
+                if data_array[i][-(j+1)] == 0 and data_array[i][-(j + 2)] != 0:
                     data_array[i][-(j+1)] = data_array[i][-(j + 2)]
                     data_array[i][-(j + 2)] = 0
+                    movement_done = True
 
-    return data_array
+    return data_array, movement_done
 
 
 def up_turn(data_array):
+    movement_done = False
     for j in range(4):  # execute for each of 4 columns
         sum_done = False  # only two values may be sum up under one move
         for k in range(3):  # max three-cell offset
@@ -156,14 +165,17 @@ def up_turn(data_array):
                         data_array[i][j] *= 2
                         data_array[i+1][j] = 0
                         sum_done = True
-                if data_array[i][j] == 0:
+                        movement_done = True
+                if data_array[i][j] == 0 and data_array[i+1][j] != 0:
                     data_array[i][j] = data_array[i+1][j]
                     data_array[i+1][j] = 0
+                    movement_done = True
 
-    return data_array
+    return data_array, movement_done
 
 
 def down_turn(data_array):
+    movement_done = False
     for j in range(4):  # execute for each of 4 columns
         sum_done = False  # only two values may be sum up under one move
         for k in range(3):  # max three-cell offset
@@ -173,11 +185,13 @@ def down_turn(data_array):
                         data_array[i+1][j] *= 2
                         data_array[i][j] = 0
                         sum_done = True
-                if data_array[i+1][j] == 0:
+                        movement_done = True
+                if data_array[i+1][j] == 0 and data_array[i][j] != 0 :
                     data_array[i+1][j] = data_array[i][j]
                     data_array[i][j] = 0
+                    movement_done = True
 
-    return data_array
+    return data_array, movement_done
 
 
 if __name__ == "__main__":
