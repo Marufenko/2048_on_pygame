@@ -1,7 +1,7 @@
 import random
 import pygame
 from pygame import *
-
+from copy import deepcopy
 from CellImage import Cell
 
 WIN_WIDTH = 400
@@ -21,6 +21,7 @@ def main():
                   [0, 0, 0, 0],
                   [0, 0, 0, 0],
                   [0, 0, 0, 0]]
+
     # generate first two values on the start
     generate_new_value(data_array)
     generate_new_value(data_array)
@@ -30,14 +31,17 @@ def main():
     x = y = 0
     for i in range(4):
         for j in range(4):
-            print(x, y, data_array[i][j])
-            cell = Cell(x, y, data_array[i][j])
+            cell = Cell(x, y, data_array[i][j], False)
             entities.add(cell)
             x += SPACE_FOR_ONE_CELL
         y += SPACE_FOR_ONE_CELL
         x = 0
 
     while 1:  # main loop
+
+        pygame.time.wait(100)  # pause required to display animation after summed up values
+        cached_data_array = deepcopy(data_array)  # cache data before each iteration
+
         right = left = up = down = False
 
         # input handling
@@ -72,8 +76,13 @@ def main():
             x = y = 0
             for i in range(4):
                 for j in range(4):
-                    print(x, y, data_array[i][j])
-                    cell = Cell(x, y, data_array[i][j])
+                    # condition to track is value should be displayed as updated or not
+                    if data_array[i][j] == cached_data_array[i][j] \
+                            or not data_array[i][j] \
+                            or not cached_data_array[i][j]:
+                        cell = Cell(x, y, data_array[i][j], False)
+                    else:
+                        cell = Cell(x, y, data_array[i][j], True)
                     entities.add(cell)
                     x += SPACE_FOR_ONE_CELL
                 y += SPACE_FOR_ONE_CELL
@@ -141,13 +150,13 @@ def right_turn(data_array):
         for k in range(3):  # max three-cell offset
             for j in range(3):  # execute for each of three pairs of values
                 if not sum_done:
-                    if data_array[i][-(j+1)] == data_array[i][-(j + 2)] and data_array[i][-(j+1)] != 0:
-                        data_array[i][-(j+1)] *= 2
+                    if data_array[i][-(j + 1)] == data_array[i][-(j + 2)] and data_array[i][-(j + 1)] != 0:
+                        data_array[i][-(j + 1)] *= 2
                         data_array[i][-(j + 2)] = 0
                         sum_done = True
                         movement_done = True
-                if data_array[i][-(j+1)] == 0 and data_array[i][-(j + 2)] != 0:
-                    data_array[i][-(j+1)] = data_array[i][-(j + 2)]
+                if data_array[i][-(j + 1)] == 0 and data_array[i][-(j + 2)] != 0:
+                    data_array[i][-(j + 1)] = data_array[i][-(j + 2)]
                     data_array[i][-(j + 2)] = 0
                     movement_done = True
 
@@ -161,14 +170,14 @@ def up_turn(data_array):
         for k in range(3):  # max three-cell offset
             for i in range(3):  # execute for each of three pairs of values
                 if not sum_done:
-                    if data_array[i][j] == data_array[i+1][j] and data_array[i][j] != 0:
+                    if data_array[i][j] == data_array[i + 1][j] and data_array[i][j] != 0:
                         data_array[i][j] *= 2
-                        data_array[i+1][j] = 0
+                        data_array[i + 1][j] = 0
                         sum_done = True
                         movement_done = True
-                if data_array[i][j] == 0 and data_array[i+1][j] != 0:
-                    data_array[i][j] = data_array[i+1][j]
-                    data_array[i+1][j] = 0
+                if data_array[i][j] == 0 and data_array[i + 1][j] != 0:
+                    data_array[i][j] = data_array[i + 1][j]
+                    data_array[i + 1][j] = 0
                     movement_done = True
 
     return data_array, movement_done
@@ -181,13 +190,13 @@ def down_turn(data_array):
         for k in range(3):  # max three-cell offset
             for i in range(2, -1, -1):  # execute for each of three pairs of values
                 if not sum_done:
-                    if data_array[i+1][j] == data_array[i][j] and data_array[i+1][j] != 0:
-                        data_array[i+1][j] *= 2
+                    if data_array[i + 1][j] == data_array[i][j] and data_array[i + 1][j] != 0:
+                        data_array[i + 1][j] *= 2
                         data_array[i][j] = 0
                         sum_done = True
                         movement_done = True
-                if data_array[i+1][j] == 0 and data_array[i][j] != 0 :
-                    data_array[i+1][j] = data_array[i][j]
+                if data_array[i + 1][j] == 0 and data_array[i][j] != 0:
+                    data_array[i + 1][j] = data_array[i][j]
                     data_array[i][j] = 0
                     movement_done = True
 

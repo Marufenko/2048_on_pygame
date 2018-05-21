@@ -6,9 +6,12 @@ CELL = (CELL_WIDTH, CELL_HEIGHT)
 
 
 class Cell(sprite.Sprite):
-    def __init__(self, x, y, value):
+    def __init__(self, x, y, value, update_flag):
 
-        image_file = "images/" + str(value) + ".png"
+        if update_flag:
+            image_file = "images/" + str(value) + "_update.png"
+        else:
+            image_file = "images/" + str(value) + ".png"
 
         sprite.Sprite.__init__(self)
         self.image = Surface(CELL)
