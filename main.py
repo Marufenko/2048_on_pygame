@@ -2,7 +2,7 @@ import random
 import pygame
 from pygame import *
 
-from Cell import Cell
+from CellImage import Cell
 
 WIN_WIDTH = 400
 WIN_HEIGHT = 400
