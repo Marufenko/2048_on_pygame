@@ -39,7 +39,7 @@ def main():
 
     while 1:  # main loop
 
-        pygame.time.wait(100)  # pause required to display animation after summed up values
+        pygame.time.wait(30)  # pause required to display animation after summed up values
         cached_data_array = deepcopy(data_array)  # cache data before each iteration
 
         right = left = up = down = False
@@ -73,22 +73,22 @@ def main():
             if movement_done:  # generate new value only when movement is done
                 generate_new_value(data_array)
 
-            x = y = 0
-            for i in range(4):
-                for j in range(4):
-                    # condition to track is value should be displayed as updated or not
-                    if data_array[i][j] == cached_data_array[i][j] \
-                            or not data_array[i][j] \
-                            or not cached_data_array[i][j]:
-                        cell = Cell(x, y, data_array[i][j], False)
-                    else:
-                        cell = Cell(x, y, data_array[i][j], True)
-                    entities.add(cell)
-                    x += SPACE_FOR_ONE_CELL
-                y += SPACE_FOR_ONE_CELL
-                x = 0
-
             right = left = up = down = False
+
+        x = y = 0
+        for i in range(4):
+            for j in range(4):
+                # condition to track is value should be displayed as updated or not
+                if data_array[i][j] == cached_data_array[i][j] \
+                        or not data_array[i][j] \
+                        or not cached_data_array[i][j]:
+                    cell = Cell(x, y, data_array[i][j], False)
+                else:
+                    cell = Cell(x, y, data_array[i][j], True)
+                entities.add(cell)
+                x += SPACE_FOR_ONE_CELL
+            y += SPACE_FOR_ONE_CELL
+            x = 0
 
         screen.blit(background, (0, 0))
         entities.draw(screen)
