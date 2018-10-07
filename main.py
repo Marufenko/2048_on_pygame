@@ -39,7 +39,7 @@ def main():
 
     while 1:  # main loop
 
-        pygame.time.wait(30)  # pause required to display animation after summed up values
+        pygame.time.wait(1)
         cached_data_array = deepcopy(data_array)  # cache data before each iteration
 
         right = left = up = down = False
